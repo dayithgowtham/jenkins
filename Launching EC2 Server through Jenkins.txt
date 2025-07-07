@@ -1,3 +1,29 @@
+***** Groovy Script used in Jenkins Pipeline to Launch a EC2 Instance by running Build in Jenkins  *****
+
+Pre-requisite
+
+1. Launch an EC2 server.
+2. Install Jenkins on that server.
+3. Install AWS CLI on the server to configure AWS via Access Key and Secret Key
+
+==============================================================================================
+
+To configure AWS in CLI
+
+sudo yum install awscli -y
+aws configure
+
+AWS Access Key ID :    [Your Access Key]
+AWS Secret Access Key : [Your Secret Key]
+Default region name :  [e.g., us-east-1]
+Default output format : [json or text]
+
+Your credentials will be saved in ~/.aws/credentials
+
+
+
+==============================================================================================
+
 pipeline {
     agent any
     
