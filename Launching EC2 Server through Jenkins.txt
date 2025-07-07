@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+    
+    environment {
+        AWS_DEFAULT_REGION = 'ap-south-1b' //Replace with your desired AWS region
+        AWS_ACCESS_KEY_ID = ' ' //Replace with your actual AWS Access Key ID
+        AWS_SECRET_ACCESS_KEY = ' ' //Replace with your actual Secret Access Key
+    }
+    
+    stages {
+        stage('Create EC2 Instance') {
+            steps{
+                script{
+                    //Replace the following with your desired EC2 instance parameters
+                    def instanceType = 't2.micro'
+                    def amiId = 'ami-018046b953a698135'
+                    def securityGroupId = 'sg-09c21c290d6d96829'
+                    def subnetId = 'subnet-08cb2a9d84257d938'
+                    
+                    //Use AWS CLI to create the EC2 instance
+                    sh "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} aws ec2 run-instances --image-id ${amiId} --instance-type ${instanceType} --security-group-ids ${securityGroupId} --subnet-id ${subnetId}"
+                    
+                    //Describe the created EC2 instance
+                    def describeInstanceOutput = sh (
+                    script: """
+                    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \\
+                    AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \\
+                    aws ec2 run-instances --image-id ${amiId} --instance-type ${instanceType} --security-group-ids ${securityGroupId} --subnet-id ${subnetId}
+                """, returnStdout: true).trim()
+                
+                //Print the EC2 instance details to the Jenkins console
+                echo "EC2 Instance Details:\n${describeInstanceOutput}"
+                }
+            }
+        }
+    }
+}
